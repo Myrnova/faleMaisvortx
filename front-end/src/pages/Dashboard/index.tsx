@@ -9,17 +9,23 @@ import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import Modal from 'react-modal';
-import { Container, Background, Content } from './styles';
+import { Container, Background, Content, DivPlan } from './styles';
 import RadioButton from '../../components/RadioButton/index';
 import Button from '../../components/Button/index';
 import api from '../../services/api';
 import Select from '../../components/Select/index';
 import getValidationErrors from '../../utils/getValidationErros';
 
+interface InputUserValues {
+  origin: string;
+  destiny: string;
+  plan: string;
+}
+
 const Dashboard: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const [values, setValues] = useState('');
+  const [values, setValues] = useState({});
 
   const [inputError, setInputError] = useState('');
 
@@ -31,16 +37,44 @@ const Dashboard: React.FC = () => {
 
   const [destiny, setDestiny] = useState('');
 
-  const radioChangeHandler = useCallback(event => {
-    setPlan(event.target.value);
-  }, []);
+  useEffect(() => {
+    console.log(origin, destiny, plan);
+  }, [origin, destiny, plan]);
+
+  const handleReturnPrice = useCallback(
+    async (event, sendOrigin, sendDestiny, sendPlan) => {
+      event.preventDefault;
+      try {
+        const response = await api.post<string>('/price', {
+          origin: sendOrigin,
+          destiny: sendDestiny,
+          time: '0',
+          plan: sendPlan,
+        });
+        if (response.data === '-')
+          setValues('Combinação de DDD não encontrada');
+        else setValues(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log('Erro');
+      }
+    },
+    [],
+  );
+
+  const radioChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setPlan(event.target.value);
+    },
+    [],
+  );
 
   const originChangeHandler = useCallback((data: string) => {
-    setOrigin(data.toString());
+    setOrigin(data);
   }, []);
 
   const destinyChangeHandler = useCallback((data: string) => {
-    setDestiny(data.toString());
+    setDestiny(data);
   }, []);
   /*  const handleSearchPrice = useCallback(async (data: object) => {
     try {
@@ -64,42 +98,43 @@ const Dashboard: React.FC = () => {
     }
   }, []); */
 
-  const handleReturnPrice = useCallback(async event => {
-    event.preventDefault();
-    console.log(origin, destiny, plan);
-    try {
-      const response = await api.post<string>('/price', {
-        origin,
-        destiny,
-        time: '0',
-        plan,
-      });
-      if (response.data === '-') setValues('Combinação de DDD não encontrada');
-      else setValues(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log('Erro');
-    }
-  }, []);
-
-  const closeModal = useCallback(event => {
+  /*   const closeModal = useCallback(event => {
     setOpenModal(false);
   }, []);
-
+ */
   return (
     <>
       <Container>
         <Content>
-          <form>
+          <Form
+            ref={formRef}
+            onSubmit={event => handleReturnPrice(event, origin, destiny, plan)}
+            /* nSubmit={() => {
+              handleReturnPrice(origin, destiny, plan);
+            }} */
+          >
             <div id="divSelect">
-              <Select name="origin" valueSelected={originChangeHandler}>
+              <Select
+                name="origin"
+                value={origin}
+                valueSelected={originChangeHandler}
+              >
                 DDD Origem
               </Select>
-              <Select name="destiny" valueSelected={destinyChangeHandler}>
+              <Select
+                name="destiny"
+                value={destiny}
+                valueSelected={destinyChangeHandler}
+              >
                 DDD Destino
               </Select>
             </div>
-            <div id="plan" onChange={radioChangeHandler}>
+            <DivPlan
+              name="plan"
+              value={plan}
+              id="plan"
+              onChange={radioChangeHandler}
+            >
               <span>Planos</span>
               <div>
                 <RadioButton id="FaleMais30" value="30" name="plan">
@@ -112,11 +147,9 @@ const Dashboard: React.FC = () => {
                   FaleMais 120
                 </RadioButton>
               </div>
-            </div>
-            <Button type="submit" onClick={handleReturnPrice}>
-              Gerar preço
-            </Button>
-          </form>
+            </DivPlan>
+            <Button type="submit">Gerar preço</Button>
+          </Form>
         </Content>
         <Background />
       </Container>

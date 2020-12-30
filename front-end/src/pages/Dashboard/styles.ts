@@ -2,6 +2,11 @@ import styled from 'styled-components';
 
 import celphoneImage from '../../assets/images/backgroundCelular.png';
 
+interface DivPlanProps {
+  value: string;
+  name: string;
+}
+
 export const Container = styled.div`
   height: 100%;
   display: flex;
@@ -37,27 +42,29 @@ export const Content = styled.div`
       width: 100%;
     }
   }
-  #plan {
-    border-style: solid;
-    border-color: #fff;
-    span {
-      font-size: 50px;
-      display: block;
-    }
-    div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    @media all and (max-width: 450px) {
-      justify-content: center;
-      width: 100%;
-    }
-    @media all and (max-width: 450px) {
-      padding: 10px;
-    }
+`;
+
+export const DivPlan = styled.div<DivPlanProps>`
+  border-style: solid;
+  border-color: #fff;
+  span {
+    font-size: 50px;
+    display: block;
+  }
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  @media all and (max-width: 450px) {
+    justify-content: center;
+    width: 100%;
+  }
+  @media all and (max-width: 450px) {
+    padding: 10px;
   }
 `;
+
 export const Background = styled.div`
   flex: 1;
   background: url(${celphoneImage}) no-repeat center;

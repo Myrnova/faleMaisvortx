@@ -10,7 +10,11 @@ interface SelectProps extends InputHTMLAttributes<HTMLInputElement> {
   valueSelected(name: string): void;
 }
 
-const SelectDDD: React.FC<SelectProps> = ({ children, ...props }) => {
+const SelectDDD: React.FC<SelectProps> = ({
+  children,
+  valueSelected,
+  ...props
+}) => {
   const [optionSelected, setOptionSelected] = useState('Default');
   const selectDDD = [
     { value: '011', label: 'DDD 011' },
@@ -24,16 +28,16 @@ const SelectDDD: React.FC<SelectProps> = ({ children, ...props }) => {
   }, []);
 
   useEffect(() => {
-    props.valueSelected(optionSelected);
-  }, [optionSelected]);
+    valueSelected(optionSelected);
+  }, [optionSelected, valueSelected]);
 
   return (
     <>
-      <Container>
+      <Container {...props}>
         <span>{children}</span>
         <select value={optionSelected} onChange={selectedValueHandler}>
           <option key="Default" value="Default" disabled>
-            Seleciona um DDD
+            Selecione um DDD
           </option>
           {selectDDD.map(option => (
             <option key={option.value} value={option.value}>
