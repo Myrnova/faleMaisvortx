@@ -1,8 +1,9 @@
-const request = require("supertest");
-const app = require("../app");
+
+import app from '../app.ts'
+import request from 'supertest'
 
 describe("Prices", () => {
-  it("should be able to give a return price", async () => {
+  it("should be able to return a price", async () => {
     const price = await request(app)
       .post("/price")
       .send({
