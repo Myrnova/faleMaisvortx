@@ -8,7 +8,6 @@ const priceRouter = Router();
 priceRouter.post('/', (req, res) => {
   try {
     const returnPrice = new ReturnPriceService();
-    let typePlan;
     const {origin, destiny, time, plan} = req.body
       let valueWithPlan = returnPrice.calculate({
       origin,

@@ -12,6 +12,9 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/runtime": "^7.12.5",
     "@types/cors": "^2.8.9",
     "@types/express": "^4.17.9",
     "babel-jest": "^26.6.3",
@@ -22,6 +25,7 @@
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1",
+    "regenerator-runtime": "^0.13.7",
     "supertest": "^6.0.1",
     "ts-jest": "^26.4.4",
     "ts-node-dev": "^1.1.1",
@@ -30,6 +34,11 @@
   "scripts": {
     "build": "tsc",
     "dev:server": "ts-node-dev --transpile-only --inspect --ignore-watch node_modules src/server.ts",
-    "test": "jest --watch"
+    "test": "jest --watchAll"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./pathToYour/setupTests.js"
+    ]
   }
 }

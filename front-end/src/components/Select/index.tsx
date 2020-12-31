@@ -8,6 +8,7 @@ import { Container } from './styles';
 
 interface SelectProps extends InputHTMLAttributes<HTMLInputElement> {
   valueSelected(name: string): void;
+  hasError: boolean;
 }
 
 const SelectDDD: React.FC<SelectProps> = ({
@@ -36,7 +37,7 @@ const SelectDDD: React.FC<SelectProps> = ({
       <Container {...props}>
         <span>{children}</span>
         <select value={optionSelected} onChange={selectedValueHandler}>
-          <option key="Default" value="Default" disabled>
+          <option key="Default" value="Default" className="Default" disabled>
             Selecione um DDD
           </option>
           {selectDDD.map(option => (
